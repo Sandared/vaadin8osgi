@@ -1,0 +1,7 @@
+-buildpath: \
+	osgi.enroute.base.api;version=2.1,\
+	org.osgi.enroute.example.vaadineight.integration.api;version=latest,\
+	com.vaadin.server;version=8.2,\
+	com.vaadin.shared;version=8.2,\
+	org.jsoup;version=1.8
+Private-Package: org.osgi.enroute.example.vaadineight.application
