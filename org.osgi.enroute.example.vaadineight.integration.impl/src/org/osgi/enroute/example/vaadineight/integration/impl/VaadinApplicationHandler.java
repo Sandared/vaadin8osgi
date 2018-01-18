@@ -35,7 +35,7 @@ public class VaadinApplicationHandler {
 			BundleContext context = ref.getBundle().getBundleContext();
 			Dictionary<String, Object> servletProps = new Hashtable<>();
 			// must be present
-			String urlPattern = (String) map.get(HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN);
+			String urlPattern = getVaadinUrlPattern((String) map.get(HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN));
 			servletProps.put(HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN, urlPattern);
 			// hardcoded, but the official Vaadin solution is even uglier
 			servletProps.put(HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_INIT_PARAM_PREFIX + Constants.PARAMETER_VAADIN_RESOURCES, "/vaadin-8.2.1");
@@ -64,5 +64,17 @@ public class VaadinApplicationHandler {
                 // obviously not a problem for us.
             }
 		}
+	}
+	
+	// Vaadin sends xhr requests for anything to .../yourPath/UIDL/?...
+	// so if the user defined a path like .../test this will become .../test/* to answer those requests
+	private String getVaadinUrlPattern(String urlPattern) {
+		if(urlPattern.endsWith("/"))
+			return urlPattern + "*";
+		if(urlPattern.endsWith("/*"))
+			return urlPattern;
+		if(!urlPattern.endsWith("/") && !urlPattern.endsWith("/*"))
+			return urlPattern + "/*";
+		throw new IllegalArgumentException();
 	}
 }
